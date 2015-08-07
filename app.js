@@ -24,17 +24,12 @@ app.on('ready', () => {
 
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
-  const ls = logstream({
-    gamerunning: true,
-    logdir: 'C:/Program Files (x86)/Steam/steamapps/common/Elite Dangerous/Products/FORC-FDEV-D-1010/Logs'
-  })
-
   mainWindow.webContents.on('did-finish-load', function() {
-    // entersystemstream.each((enteredsystem) => {
-    //   mainWindow.webContents.send('enteredsystem', enteredsystem)
-    // })
+    let i = 0
+    setInterval(() => mainWindow.webContents.send('ping', i++), 333)
   })
 
+  mainWindow.openDevTools()
 
   mainWindow.on('closed', function() {
     mainWindow = null;
