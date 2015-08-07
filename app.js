@@ -1,8 +1,7 @@
 
 import Y                from "highland"
 import colors           from "colors"
-import logstream        from "./lib/logstream"
-import distinct         from "./lib/stream/distinct"
+
 
 import app              from "app"
 import BrowserWindow    from "browser-window"
@@ -29,21 +28,6 @@ app.on('ready', () => {
     gamerunning: true,
     logdir: 'C:/Program Files (x86)/Steam/steamapps/common/Elite Dangerous/Products/FORC-FDEV-D-1010/Logs'
   })
-
-  var entersystemstream = (
-    ls
-      .split()
-      .filter((line) => {
-        return line && line.toLowerCase().match(/system\:\d+/)
-      })
-      .map((line) => {
-        let match = /System\:\d+\((.+?)\)/.exec(line)
-        if(match) {
-          return match[1]
-        }
-      })
-      .through(distinct)
-  )
 
   mainWindow.webContents.on('did-finish-load', function() {
     // entersystemstream.each((enteredsystem) => {
