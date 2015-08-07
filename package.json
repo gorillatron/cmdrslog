@@ -1,0 +1,23 @@
+{
+  "name": "cmdrslog",
+  "version": "1.0.0",
+  "description": "Track elite log data",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node index.js --stage=0",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jørn Andre Tangen, CMDR Blytz",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.21",
+    "electron-prebuilt": "^0.30.2"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "highland": "^2.5.1",
+    "lodash": "^3.10.1",
+    "tail": "^0.4.0",
+    "tailing-stream": "^0.1.1"
+  }
+}
