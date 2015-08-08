@@ -16,6 +16,7 @@
   "dependencies": {
     "colors": "^1.1.2",
     "highland": "^2.5.1",
+    "immutable": "^3.7.4",
     "lodash": "^3.10.1",
     "tail": "^0.4.0",
     "tailing-stream": "^0.1.1"

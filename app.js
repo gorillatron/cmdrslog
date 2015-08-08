@@ -1,10 +1,10 @@
 
-import Y                from "highland"
-import colors           from "colors"
-
-
+import fs               from "fs"
 import app              from "app"
 import BrowserWindow    from "browser-window"
+import ipc              from "ipc"
+import LogSession       from "./lib/LogSession"
+import LogObserver      from "./lib/LogObserver"
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -18,20 +18,40 @@ app.on('window-all-closed', () => {
   }
 })
 
+
 app.on('ready', () => {
 
   mainWindow = new BrowserWindow({width: 1200, height: 1200});
-
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.openDevTools()
+
 
   mainWindow.webContents.on('did-finish-load', function() {
-    let i = 0
-    setInterval(() => mainWindow.webContents.send('ping', i++), 333)
+    //mainWindow.webContents.send event content
+
+    ipc.on("startLogSession", (event) => {
+      const logSession = new LogSession()
+      const logObserver = new LogObserver()
+
+      logObserver.on("enteredSystem", (system) => {
+        console.log(system)
+        logSession.enteredSystem(system)
+        mainWindow.webContents.send("enteredSystems", logSession.getEnteredSystems())
+      })
+
+      logObserver.observe()
+
+      ipc.once("stopLogSession", () => {
+        logObserver.destroy()
+      })
+
+    })
+
   })
 
-  mainWindow.openDevTools()
 
   mainWindow.on('closed', function() {
     mainWindow = null;
   })
-});
+
+})
