@@ -13,10 +13,11 @@ export default class Home extends React.Component {
   }
 
   componentDidMount() {
-    App.ipc.on("enteredSystems", (enteredSystems) => this.setState({enteredSystems}))
+    App.ipc.on("currentLogSession:change", (currentLogSession) => this.setState({currentLogSession}))
   }
 
   render() {
+
     return (
       <div>
         <button onClick={::this.toggleLogSession}>
@@ -30,8 +31,8 @@ export default class Home extends React.Component {
 
         <ul>
         {
-          this.state.enteredSystems &&
-            this.state.enteredSystems.map((system) => <li key={system.name}>{system.name}</li>)
+          this.state.currentLogSession &&
+            this.state.currentLogSession.data.enteredSystems.map((system) => <li key={system.name}>{system.name}</li>)
         }
         </ul>
 
@@ -42,7 +43,7 @@ export default class Home extends React.Component {
 
   toggleLogSession() {
     const activeSession = !this.state.activeSession
-    
+
     this.setState({ activeSession })
 
     if(activeSession) {

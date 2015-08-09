@@ -1,15 +1,28 @@
 
 import fs               from "fs"
+import path             from "path"
+import DataStore        from "nedb"
 import app              from "app"
 import BrowserWindow    from "browser-window"
 import ipc              from "ipc"
 import LogSession       from "./lib/LogSession"
-import LogObserver      from "./lib/LogObserver"
+import getUserHome      from "./lib/util/getUserHome"
 
+
+const dbPath = path.join(getUserHome(process), "AppData", "Local", "cmdrslog")
+
+if (!fs.existsSync(dbPath)){
+  fs.mkdirSync(dbPath)
+}
+
+
+var logSessionStore = new DataStore({
+  filename: path.join(dbPath, "logsessions"), autoload: true })
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is GCed.
-var mainWindow = null;
+
+var mainWindow = null;var mainWindow = null;
 
 
 app.on('window-all-closed', () => {
@@ -21,28 +34,29 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
 
-  mainWindow = new BrowserWindow({width: 1200, height: 1200});
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
-  mainWindow.openDevTools()
+  mainWindow = new BrowserWindow({width: 1200, height: 1200, frame: false})
+
+  mainWindow.loadUrl('file://' + __dirname + '/index.html')
+  mainWindow.openDevTools({detach: true})
 
 
   mainWindow.webContents.on('did-finish-load', function() {
-    //mainWindow.webContents.send event content
 
     ipc.on("startLogSession", (event) => {
-      const logSession = new LogSession()
-      const logObserver = new LogObserver()
 
-      logObserver.on("enteredSystem", (system) => {
-        console.log(system)
-        logSession.enteredSystem(system)
-        mainWindow.webContents.send("enteredSystems", logSession.getEnteredSystems())
+      const logSession = new LogSession()
+
+      logSession.on("change", (logSession) => {
+        mainWindow.webContents.send("currentLogSession:change", logSession)
       })
 
-      logObserver.observe()
+      logSession.start()
 
       ipc.once("stopLogSession", () => {
-        logObserver.destroy()
+        logSession.stop()
+        logSessionStore.insert(logSession.toJSON(), (err) => {
+          console.log(err)
+        })
       })
 
     })
@@ -51,7 +65,7 @@ app.on('ready', () => {
 
 
   mainWindow.on('closed', function() {
-    mainWindow = null;
+    mainWindow = null
   })
 
 })
