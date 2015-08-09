@@ -2,10 +2,26 @@
 import React           from "react"
 import Radium          from "radium"
 import color           from "color"
+import Halogen         from "halogen"
 import {RouteHandler}  from "react-router"
+import theme           from "../../theme"
+import SplashScreen    from "./SplashScreen"
+
+
 
 @Radium
-export default class App extends React.Component {
+export default class AppComponent extends React.Component {
+
+  constructor() {
+    super()
+    this.state = {
+      boostrapping: true
+    }
+  }
+
+  componentDidMount() {
+    App.ipc.on("stateChange", ::this.setState)
+  }
 
   render() {
     return (
@@ -13,10 +29,20 @@ export default class App extends React.Component {
 
         width: "100%",
         height: "100%",
-        background: color("#000000").clearer(0.1).rgbaString()
+        background: theme.colors.mainBackground
 
       }}>
-        <RouteHandler/>
+
+        {
+          this.state.boostrapping ?
+
+            <SplashScreen /> :
+
+            <div>
+              LOADED
+            </div>
+        }
+
       </div>
     )
   }

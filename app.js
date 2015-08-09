@@ -15,14 +15,10 @@ if (!fs.existsSync(dbPath)){
   fs.mkdirSync(dbPath)
 }
 
-
 var logSessionStore = new DataStore({
   filename: path.join(dbPath, "logsessions"), autoload: true })
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is GCed.
-
-var mainWindow = null;var mainWindow = null;
+var mainWindow = null
 
 
 app.on('window-all-closed', () => {
@@ -34,30 +30,17 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
 
-  mainWindow = new BrowserWindow({width: 1200, height: 1200, frame: false, transparent: true})
+  mainWindow = new BrowserWindow({width: 1000, height: 1000, frame: false, transparent: true})
 
   mainWindow.loadUrl("http://localhost:3000/index.html")
-  mainWindow.openDevTools({detach: true})
+  mainWindow.openDevTools({detach: true, x: 100})
 
+  mainWindow.setPosition(1520, 100)
 
   mainWindow.webContents.on('did-finish-load', function() {
 
-    ipc.on("startLogSession", (event) => {
+    ipc.on("action", (event) => {
 
-      const logSession = new LogSession()
-
-      logSession.on("change", (logSession) => {
-        mainWindow.webContents.send("currentLogSession:change", logSession)
-      })
-
-      logSession.start()
-
-      ipc.once("stopLogSession", () => {
-        logSession.stop()
-        logSessionStore.insert(logSession.toJSON(), (err) => {
-          console.log(err)
-        })
-      })
 
     })
 
