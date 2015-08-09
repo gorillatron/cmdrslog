@@ -10,6 +10,8 @@ module.exports = {
     './app/app.js'
   ],
 
+  publicPath: "/assets/",
+
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'app.js',
@@ -23,14 +25,20 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx', '.json']
   },
 
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      loaders: ['react-hot', 'babel'],
-      include: path.join(__dirname, 'app')
-    }]
+
+    loaders: [
+
+      { test: /\.json$/,
+        loader: "json-loader" },
+
+      { test: /\.jsx?$/,
+        loaders: ['react-hot', 'babel'],
+        include: path.join(__dirname, 'app') },
+
+    ]
   }
 };

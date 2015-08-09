@@ -34,9 +34,9 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
 
-  mainWindow = new BrowserWindow({width: 1200, height: 1200, frame: false})
+  mainWindow = new BrowserWindow({width: 1200, height: 1200, frame: false, transparent: true})
 
-  mainWindow.loadUrl('file://' + __dirname + '/index.html')
+  mainWindow.loadUrl("http://localhost:3000/index.html")
   mainWindow.openDevTools({detach: true})
 
 
