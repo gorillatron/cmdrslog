@@ -20,7 +20,7 @@ export default class AppComponent extends React.Component {
   }
 
   componentDidMount() {
-    App.ipc.on("stateChange", ::this.setState)
+    App.ipc.on("appstate:change", ::this.setState)
   }
 
   render() {

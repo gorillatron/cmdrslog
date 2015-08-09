@@ -5,20 +5,22 @@ import DataStore        from "nedb"
 import app              from "app"
 import BrowserWindow    from "browser-window"
 import ipc              from "ipc"
-import LogSession       from "./lib/LogSession"
 import getUserHome      from "./lib/util/getUserHome"
+import AppState         from "./lib/AppState"
+import Dispatcher       from "./lib/Dispatcher"
+import {Map}            from "immutable"
 
-
-const dbPath = path.join(getUserHome(process), "AppData", "Local", "cmdrslog")
-
-if (!fs.existsSync(dbPath)){
-  fs.mkdirSync(dbPath)
-}
-
-var logSessionStore = new DataStore({
-  filename: path.join(dbPath, "logsessions"), autoload: true })
 
 var mainWindow = null
+
+
+const appstate = new AppState(new Map({
+  boostrapping: true,
+  currentLogSession: null
+}))
+
+
+const dispatcher = new Dispatcher()
 
 
 app.on('window-all-closed', () => {
@@ -34,20 +36,27 @@ app.on('ready', () => {
 
   mainWindow.loadUrl("http://localhost:3000/index.html")
   mainWindow.openDevTools({detach: true, x: 100})
-
   mainWindow.setPosition(1520, 100)
 
-  mainWindow.webContents.on('did-finish-load', function() {
 
-    ipc.on("action", (event) => {
+  mainWindow.webContents.on('did-finish-load', () => {
 
-
+    ipc.on("action", (event, action, ...params) => {
+      dispatcher.dispatch(action, ...params)
     })
+
+    appstate.on("change", (appstate) => {
+      mainWindow.webContents.send("appstate:change", appstate)
+    })
+
+    setTimeout(() => {
+      appstate.setState({boostrapping: false})
+    }, 500)
 
   })
 
 
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', () => {
     mainWindow = null
   })
 
