@@ -1,6 +1,6 @@
 import React              from "react"
 import Router             from "react-router"
-import {HashLocation}  from "react-router"
+import {HashLocation}     from "react-router"
 import RouterRoot         from "./components/Routes.jsx"
 
 

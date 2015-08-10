@@ -1,22 +1,27 @@
 
-import fs               from "fs"
-import path             from "path"
-import DataStore        from "nedb"
-import app              from "app"
-import BrowserWindow    from "browser-window"
-import ipc              from "ipc"
-import getUserHome      from "./lib/util/getUserHome"
-import AppState         from "./lib/AppState"
-import Dispatcher       from "./lib/Dispatcher"
-import {Map}            from "immutable"
+import fs                       from "fs"
+import path                     from "path"
+import DataStore                from "nedb"
+import app                      from "app"
+import BrowserWindow            from "browser-window"
+import ipc                      from "ipc"
+import getUserHome              from "./lib/util/getUserHome"
+import AppState                 from "./lib/AppState"
+import Dispatcher               from "./lib/Dispatcher"
+import {fromJS as toImmutable}  from "immutable"
 
 
 var mainWindow = null
 
 
-const appstate = new AppState(new Map({
+const appstate = new AppState(toImmutable({
+  userPrefrences: {
+    gameDir: 'C:/Program Files (x86)/Steam/steamapps/common/Elite Dangerous',
+    logDir: '/Products/FORC-FDEV-D-1010/Logs'
+  },
   boostrapping: true,
-  currentLogSession: null
+  currentLogSession: null,
+  logSessions:[]
 }))
 
 

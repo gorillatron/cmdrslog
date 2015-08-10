@@ -33,14 +33,23 @@ export default class AppComponent extends React.Component {
 
       }}>
 
+        <Radium.Style rules={{
+          a: {
+            color: "inherit",
+            "text-decoration": "none"
+          }
+        }} />
+
         {
           this.state.boostrapping ?
 
             <SplashScreen /> :
 
-            <div>
-              LOADED
-            </div>
+            <RouteHandler
+              style={{
+                width: "100%",
+                height: "100%"
+              }}/>
         }
 
       </div>
