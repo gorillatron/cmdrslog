@@ -41,16 +41,15 @@ export default class AppComponent extends React.Component {
         }} />
 
         {
-          this.state.boostrapping ?
-
-            <SplashScreen /> :
-
-            <RouteHandler
-              style={{
-                width: "100%",
-                height: "100%"
-              }}/>
+          this.state.boostrapping &&
+            <SplashScreen />
         }
+
+        <RouteHandler
+          style={{
+            width: "100%",
+            height: "100%"
+          }}/>
 
       </div>
     )

@@ -56,7 +56,7 @@ app.on('ready', () => {
 
     setTimeout(() => {
       appstate.setState({boostrapping: false})
-    }, 500)
+    }, 1200)
 
   })
 
